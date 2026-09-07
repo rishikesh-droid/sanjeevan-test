@@ -1,0 +1,60 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import { breadcrumbJsonLd } from '../lib/seo';
+import { initials } from '../lib/images';
+
+const batches = (await getCollection('students')).sort((a, b) => a.data.order - b.data.order);
+const ent = batches.filter((b) => b.data.group === 'ent');
+const fellowship = batches.filter((b) => b.data.group === 'fellowship');
+const crumbs = [{ name: 'Students', href: '/students' }];
+---
+
+<BaseLayout title="Students" path="/students"
+  description="Postgraduate students on roll at Sanjeevan PGI, Miraj — MS (ENT) batches and Fellowship trainees."
+  jsonLd={[breadcrumbJsonLd(crumbs)]}>
+  <PageHero eyebrow="Students" title="Our Postgraduate Students" crumbs={crumbs}
+    subtitle="MS (ENT) residents and Fellowship trainees currently on roll at the institute." />
+
+  <section class="container-page py-16">
+    <h2 class="font-display text-2xl font-semibold text-brand-900">MS (ENT) — Students on Roll</h2>
+    <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      {ent.map((b) => (
+        <div data-reveal class="rounded-2xl border border-line bg-surface p-6 shadow-[var(--shadow-card)]">
+          <div class="flex items-center justify-between">
+            <h3 class="font-display text-lg font-semibold text-brand-900">{b.data.batch}</h3>
+            <span class="rounded-full bg-accent-50 px-2.5 py-1 text-xs font-semibold text-accent-700">{b.data.programme}</span>
+          </div>
+          <ul class="mt-4 space-y-3">
+            {b.data.members.map((m) => (
+              <li class="flex items-center gap-3">
+                <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-brand-100 text-xs font-semibold text-brand-700">{initials(m.name)}</span>
+                <span class="text-sm font-medium text-brand-800">{m.name}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  {fellowship.length > 0 && (
+    <section class="bg-surface-2 py-16">
+      <div class="container-page">
+        <h2 class="font-display text-2xl font-semibold text-brand-900">Fellowship — Trainees on Roll</h2>
+        <div class="mt-8 grid gap-6 sm:grid-cols-2">
+          {fellowship.flatMap((b) => b.data.members).map((m) => (
+            <div class="flex items-center gap-4 rounded-2xl border border-line bg-surface p-5 shadow-[var(--shadow-card)]">
+              <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-brand-100 text-sm font-semibold text-brand-700">{initials(m.name)}</span>
+              <div>
+                <p class="font-semibold text-brand-900">{m.name}</p>
+                {m.note && <p class="text-sm text-muted">{m.note}</p>}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+</BaseLayout>

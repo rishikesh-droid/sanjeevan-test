@@ -1,0 +1,184 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import { breadcrumbJsonLd } from '../../lib/seo';
+
+const programmes = (await getCollection('programmes')).sort((a, b) => a.data.order - b.data.order);
+const crumbs = [{ name: 'Admissions', href: '/admissions' }];
+
+// Editable PG seat matrix (Academic Year 2025–26). Update each academic year.
+// Source: institute — "PG Seats available for Academic Year 2025-26".
+const seatMatrix = {
+  year: '2025–26',
+  rows: [
+    {
+      sr: 1,
+      subject: 'MS (ENT) — Otorhinolaryngology',
+      sanctioned: 3,
+      recognised: 3,
+      toFill: 3,
+      management: 1,
+      obc: 1,
+      open: 1,
+    },
+  ],
+};
+
+// Editable fee structure — Fees Regulating Authority (FRA), Maharashtra,
+// Department of E.N.T., Academic Year 2025–26. Figures are revised each year.
+const fees = [
+  { sr: 1, head: 'Tuition Fee', amount: '₹ 9,57,500' },
+  { sr: 2, head: 'Development Fee', amount: 'Nil' },
+  { sr: 3, head: 'Management Fees', amount: '₹ 28,72,500' },
+  { sr: 4, head: 'NRI Seat Fees', amount: '₹ 38,30,000' },
+  { sr: 5, head: 'Against NRI Seat Fees', amount: '₹ 38,30,000' },
+  { sr: 6, head: 'Caution Money / Deposit', amount: 'Nil' },
+];
+
+// Fellowship course fees (Cancer Hospital, Miraj).
+const fellowshipFees = [
+  { course: 'Onco-Pathology', amount: '₹ 1,00,000' },
+  { course: 'Head & Neck Cancer Surgery', amount: '₹ 1,00,000' },
+];
+---
+
+<BaseLayout title="Admissions" path="/admissions"
+  description="MS (ENT) and Fellowship admissions at Sanjeevan PGI, Miraj — eligibility, seat matrix, fees and how to apply through NEET-PG / MUHS."
+  jsonLd={[breadcrumbJsonLd(crumbs)]}>
+  <PageHero eyebrow="Admissions" title="Admissions 2025–26" crumbs={crumbs}
+    subtitle="Everything a prospective postgraduate needs — programmes, eligibility, the current seat matrix, fees and how to apply." />
+
+  <!-- Programme cards -->
+  <section class="container-page py-16">
+    <div class="grid gap-6 md:grid-cols-2">
+      {programmes.map((p) => (
+        <div class="flex flex-col rounded-2xl border border-line bg-surface p-7 shadow-[var(--shadow-card)]">
+          <div class="flex items-center justify-between gap-3">
+            <h2 class="font-display text-2xl font-semibold text-brand-900">{p.data.title}</h2>
+            <span class="rounded-full bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-700">{p.data.duration}</span>
+          </div>
+          <p class="mt-3 flex-1 text-sm leading-relaxed text-muted">{p.data.summary}</p>
+          <dl class="mt-5 grid grid-cols-2 gap-3 text-sm">
+            <div><dt class="text-muted">Degree</dt><dd class="font-semibold text-brand-800">{p.data.degree}</dd></div>
+            {p.data.seats && <div><dt class="text-muted">Seats</dt><dd class="font-semibold text-brand-800">{p.data.seats}</dd></div>}
+          </dl>
+          <a href={p.data.shortTitle === 'MS (ENT)' ? '/admissions/ms-ent' : '/admissions/fellowship'}
+             class="mt-6 inline-block rounded-full bg-brand-800 px-5 py-2.5 text-center text-sm font-semibold text-white transition hover:bg-brand-900">View programme details</a>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- Seat Matrix -->
+  <section id="seat-matrix" class="scroll-mt-24 bg-surface-2 py-16">
+    <div class="container-page">
+      <p class="text-xs font-semibold uppercase tracking-[0.2em] text-accent-600">Seat Matrix · {seatMatrix.year}</p>
+      <h2 class="mt-3 font-display text-3xl font-semibold text-brand-900">PG seats available — MS (ENT)</h2>
+      <div class="mt-8 overflow-x-auto rounded-2xl border border-line bg-surface shadow-[var(--shadow-card)]">
+        <table class="w-full min-w-[720px] border-collapse text-sm">
+          <thead>
+            <tr class="bg-brand-950 text-left text-white">
+              <th class="px-4 py-3 font-semibold">Sr.</th>
+              <th class="px-4 py-3 font-semibold">Subject</th>
+              <th class="px-4 py-3 text-center font-semibold">Total sanctioned</th>
+              <th class="px-4 py-3 text-center font-semibold">Recognised by NMC / MCI</th>
+              <th class="px-4 py-3 text-center font-semibold">To fill ({seatMatrix.year}) — MUHS / ARA</th>
+              <th class="px-4 py-3 text-center font-semibold">Management Quota</th>
+              <th class="px-4 py-3 text-center font-semibold">State NEET-PG · OBC</th>
+              <th class="px-4 py-3 text-center font-semibold">State NEET-PG · Open</th>
+            </tr>
+          </thead>
+          <tbody>
+            {seatMatrix.rows.map((r) => (
+              <tr class="border-t border-line">
+                <td class="px-4 py-3 text-muted">{r.sr}</td>
+                <td class="px-4 py-3 font-semibold text-brand-800">{r.subject}</td>
+                <td class="px-4 py-3 text-center text-muted">{r.sanctioned}</td>
+                <td class="px-4 py-3 text-center text-muted">{r.recognised}</td>
+                <td class="px-4 py-3 text-center text-muted">{r.toFill}</td>
+                <td class="px-4 py-3 text-center font-semibold text-brand-800">{r.management}</td>
+                <td class="px-4 py-3 text-center font-semibold text-brand-800">{r.obc}</td>
+                <td class="px-4 py-3 text-center font-semibold text-brand-800">{r.open}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p class="mt-3 text-xs text-muted">Recognition: MCI/NMC Letter No. 46(22)/2019-Med/MCI/178297 dated 21/02/2019. Seats are filled through NEET-PG / State CET by the Competent Authority (MUHS, Nashik / ARA). Figures are updated each academic year — see <a href="/notices" class="text-brand-700 underline">Notices</a> for the latest circulars.</p>
+    </div>
+  </section>
+
+  <!-- Fees -->
+  <section id="fees" class="scroll-mt-24 container-page py-16">
+    <p class="text-xs font-semibold uppercase tracking-[0.2em] text-accent-600">Fees · {seatMatrix.year}</p>
+    <h2 class="mt-3 font-display text-3xl font-semibold text-brand-900">MS (ENT) fee structure</h2>
+    <p class="mt-2 max-w-3xl text-sm text-muted">As determined by the Fees Regulating Authority (FRA), Maharashtra, for the Department of E.N.T. (Academic Year {seatMatrix.year}).</p>
+    <div class="mt-8 overflow-x-auto rounded-2xl border border-line bg-surface shadow-[var(--shadow-card)]">
+      <table class="w-full min-w-[520px] border-collapse text-sm">
+        <thead>
+          <tr class="bg-brand-950 text-left text-white">
+            <th class="px-4 py-3 font-semibold">Sr.</th>
+            <th class="px-4 py-3 font-semibold">Description</th>
+            <th class="px-4 py-3 text-right font-semibold">Fees</th>
+          </tr>
+        </thead>
+        <tbody>
+          {fees.map((f) => (
+            <tr class="border-t border-line">
+              <td class="px-4 py-3 text-muted">{f.sr}</td>
+              <td class="px-4 py-3 font-medium text-brand-800">{f.head}</td>
+              <td class="px-4 py-3 text-right text-muted">{f.amount}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="mt-8 grid gap-6 md:grid-cols-2">
+      <div class="rounded-2xl border border-line bg-surface-2 p-6">
+        <h3 class="font-display text-lg font-semibold text-brand-900">Fellowship course fees</h3>
+        <ul class="mt-3 space-y-2 text-sm">
+          {fellowshipFees.map((f) => (
+            <li class="flex justify-between gap-4 border-b border-line pb-2 last:border-0">
+              <span class="text-muted">{f.course}</span><span class="font-semibold text-brand-800">{f.amount}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div class="rounded-2xl border border-line bg-surface-2 p-6">
+        <h3 class="font-display text-lg font-semibold text-brand-900">Mode of payment</h3>
+        <p class="mt-3 text-sm text-muted">By Demand Draft or Cheque:</p>
+        <dl class="mt-2 space-y-1.5 text-sm">
+          <div class="flex gap-2"><dt class="w-28 shrink-0 text-muted">Beneficiary</dt><dd class="font-medium text-brand-800">Sanjeevan Medical Foundation</dd></div>
+          <div class="flex gap-2"><dt class="w-28 shrink-0 text-muted">Payable at</dt><dd class="font-medium text-brand-800">Miraj</dd></div>
+          <div class="flex gap-2"><dt class="w-28 shrink-0 text-muted">Bank</dt><dd class="font-medium text-brand-800">Any Nationalized Bank</dd></div>
+        </dl>
+      </div>
+    </div>
+    <p class="mt-4 text-xs text-muted">FRA fees are revised each academic year. Please confirm the current year's figures with the admissions office before payment.</p>
+  </section>
+
+  <!-- How to apply -->
+  <section id="how-to-apply" class="scroll-mt-24 bg-brand-950 py-16 text-white">
+    <div class="container-page">
+      <p class="text-xs font-semibold uppercase tracking-[0.2em] text-accent-300">How to Apply</p>
+      <h2 class="mt-3 font-display text-3xl font-semibold">Four steps to admission</h2>
+      <ol class="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        {[
+          { t: 'Appear for NEET-PG', d: 'Qualify NEET-PG with a valid rank for the current admission cycle.' },
+          { t: 'Register for counselling', d: 'Register with the Competent Authority (State CET Cell / MCC) for centralised counselling.' },
+          { t: 'Opt for Sanjeevan PGI', d: 'Choose the MS (ENT) seat at Sanjeevan PGI, Miraj during choice-filling.' },
+          { t: 'Complete admission', d: 'Report with documents and complete fee payment as per the allotment.' },
+        ].map((s, i) => (
+          <li class="rounded-2xl border border-brand-800 bg-brand-900/40 p-6">
+            <span class="font-display text-3xl font-semibold text-accent-300">{i + 1}</span>
+            <h3 class="mt-2 font-semibold text-white">{s.t}</h3>
+            <p class="mt-1.5 text-sm text-brand-200">{s.d}</p>
+          </li>
+        ))}
+      </ol>
+      <a href="/contact#enquiry" class="mt-10 inline-block rounded-full bg-accent-600 px-6 py-3 text-sm font-semibold transition hover:bg-accent-700">Send an Admission Enquiry</a>
+    </div>
+  </section>
+</BaseLayout>

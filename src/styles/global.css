@@ -1,0 +1,112 @@
+@import './fonts.css';
+@import 'tailwindcss';
+
+/* ==========================================================================
+   DESIGN TOKENS — the whole theme is driven from here.
+   Brand: deep academic NAVY (primary) + the logo's medical RED (accent),
+   on white / slate neutrals. Clean, credible, medical-academic.
+   Do NOT hardcode brand colours in components — use these token utilities.
+   ========================================================================== */
+@theme {
+  /* Brand navy (primary) */
+  --color-brand-50: #eef3fb;
+  --color-brand-100: #d5e1f4;
+  --color-brand-200: #adc3e8;
+  --color-brand-300: #7e9dd6;
+  --color-brand-400: #4f74bd;
+  --color-brand-500: #2f539f;
+  --color-brand-600: #1f3d80;
+  --color-brand-700: #182f63;
+  --color-brand-800: #122448;
+  --color-brand-900: #0d1b36;
+  --color-brand-950: #071041;
+
+  /* Accent red (from institute logo) */
+  --color-accent-50: #fdf2f3;
+  --color-accent-100: #fbe0e2;
+  --color-accent-200: #f6c2c7;
+  --color-accent-300: #ee97a0;
+  --color-accent-400: #e25c6a;
+  --color-accent-500: #cf2f40;
+  --color-accent-600: #c8102e;
+  --color-accent-700: #a30d26;
+  --color-accent-800: #870f24;
+  --color-accent-900: #731123;
+
+  /* Neutrals (slate) — used for text/surfaces */
+  --color-ink: #0f172a;
+  --color-muted: #475569;
+  --color-line: #e2e8f0;
+  --color-surface: #ffffff;
+  --color-surface-2: #f6f8fb;
+
+  /* Typography */
+  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  --font-serif: 'Fraunces', ui-serif, Georgia, 'Times New Roman', serif;
+
+  /* Radii / shadows */
+  --radius-xl: 1rem;
+  --shadow-card: 0 1px 2px rgb(15 23 42 / 0.04), 0 8px 24px -12px rgb(15 23 42 / 0.15);
+}
+
+/* ---- Base ---- */
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+body {
+  font-family: var(--font-sans);
+  color: var(--color-ink);
+  background: var(--color-surface);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+:focus-visible {
+  outline: 3px solid var(--color-accent-500);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+
+/* Fluid display type */
+.font-display { font-family: var(--font-serif); font-optical-sizing: auto; }
+
+/* ---- Reusable layout helpers ---- */
+@utility container-page {
+  width: 100%;
+  margin-inline: auto;
+  max-width: 80rem;
+  padding-inline: 1.25rem;
+}
+@media (min-width: 768px) {
+  .container-page { padding-inline: 2rem; }
+}
+
+/* Prose defaults for MDX bodies */
+.prose-block :where(p) { margin-block: 0.85em; line-height: 1.7; color: var(--color-muted); }
+.prose-block :where(h2) { font-weight: 700; color: var(--color-brand-800); margin-top: 1.6em; margin-bottom: .4em; font-size: 1.4rem; }
+.prose-block :where(h3) { font-weight: 700; color: var(--color-brand-800); margin-top: 1.2em; font-size: 1.15rem; }
+.prose-block :where(ul) { list-style: disc; padding-left: 1.25rem; color: var(--color-muted); }
+.prose-block :where(li) { margin-block: .35em; }
+.prose-block :where(a) { color: var(--color-accent-600); text-decoration: underline; text-underline-offset: 2px; }
+.prose-block :where(strong) { color: var(--color-ink); }
+
+/* ---- Scroll-reveal (progressive enhancement) ----
+   Content is fully visible by default. The hidden-then-animate state applies
+   ONLY when JS is active (html.js), so a JS/observer failure never hides
+   content. Reduced-motion users skip the animation entirely. */
+.js [data-reveal] {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity .6s ease, transform .6s ease;
+  will-change: opacity, transform;
+}
+.js [data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .js [data-reveal] { opacity: 1; transform: none; transition: none; }
+}

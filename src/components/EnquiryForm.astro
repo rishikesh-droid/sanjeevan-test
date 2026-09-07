@@ -1,0 +1,151 @@
+---
+import { site } from '../config/site';
+/**
+ * Admission enquiry form — client-side validated, no backend.
+ *
+ * By default it falls back to a mailto: submission so it works on pure static
+ * hosting with zero configuration. To wire a real endpoint (Formspree, Web3Forms,
+ * a serverless function, or a WhatsApp handoff), set `data-endpoint` on the form
+ * to your POST URL — the script will use fetch() instead of mailto.
+ * See README → "Connecting the enquiry form".
+ */
+const mailto = site.contact.email;
+---
+<form id="enquiry-form" class="rounded-2xl border border-line bg-surface p-7 shadow-[var(--shadow-card)]" novalidate
+  data-mailto={mailto} data-endpoint="">
+  <h2 class="font-display text-2xl font-semibold text-brand-900">Admission Enquiry</h2>
+  <p class="mt-2 text-sm text-muted">Tell us about yourself and the programme you're interested in. Fields marked * are required.</p>
+
+  <div class="mt-6 grid gap-5">
+    <div class="grid gap-5 sm:grid-cols-2">
+      <div>
+        <label for="f-name" class="block text-sm font-medium text-brand-800">Full name *</label>
+        <input id="f-name" name="name" type="text" required autocomplete="name"
+          class="mt-1.5 w-full rounded-lg border border-line bg-surface px-3.5 py-2.5 text-sm outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-200" />
+        <p class="err mt-1 hidden text-xs text-accent-600">Please enter your name.</p>
+      </div>
+      <div>
+        <label for="f-phone" class="block text-sm font-medium text-brand-800">Phone *</label>
+        <input id="f-phone" name="phone" type="tel" required autocomplete="tel" inputmode="tel"
+          class="mt-1.5 w-full rounded-lg border border-line bg-surface px-3.5 py-2.5 text-sm outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-200" />
+        <p class="err mt-1 hidden text-xs text-accent-600">Enter a valid 10-digit phone number.</p>
+      </div>
+    </div>
+
+    <div>
+      <label for="f-email" class="block text-sm font-medium text-brand-800">Email *</label>
+      <input id="f-email" name="email" type="email" required autocomplete="email"
+        class="mt-1.5 w-full rounded-lg border border-line bg-surface px-3.5 py-2.5 text-sm outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-200" />
+      <p class="err mt-1 hidden text-xs text-accent-600">Enter a valid email address.</p>
+    </div>
+
+    <div class="grid gap-5 sm:grid-cols-2">
+      <div>
+        <label for="f-programme" class="block text-sm font-medium text-brand-800">Programme of interest *</label>
+        <select id="f-programme" name="programme" required
+          class="mt-1.5 w-full rounded-lg border border-line bg-surface px-3.5 py-2.5 text-sm outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-200">
+          <option value="">Select…</option>
+          <option>MS (ENT)</option>
+          <option>Fellowship — Onco-Pathology</option>
+          <option>Fellowship — Head & Neck Cancer Surgery</option>
+          <option>Other / General enquiry</option>
+        </select>
+        <p class="err mt-1 hidden text-xs text-accent-600">Please choose a programme.</p>
+      </div>
+      <div>
+        <label for="f-category" class="block text-sm font-medium text-brand-800">NEET category</label>
+        <select id="f-category" name="category"
+          class="mt-1.5 w-full rounded-lg border border-line bg-surface px-3.5 py-2.5 text-sm outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-200">
+          <option value="">Select…</option>
+          <option>Open</option>
+          <option>OBC</option>
+          <option>SC</option>
+          <option>ST</option>
+          <option>EWS</option>
+          <option>NRI</option>
+        </select>
+      </div>
+    </div>
+
+    <div>
+      <label for="f-score" class="block text-sm font-medium text-brand-800">NEET-PG score / rank</label>
+      <input id="f-score" name="score" type="text" inputmode="numeric"
+        class="mt-1.5 w-full rounded-lg border border-line bg-surface px-3.5 py-2.5 text-sm outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-200" />
+    </div>
+
+    <div>
+      <label for="f-message" class="block text-sm font-medium text-brand-800">Message</label>
+      <textarea id="f-message" name="message" rows="4"
+        class="mt-1.5 w-full rounded-lg border border-line bg-surface px-3.5 py-2.5 text-sm outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-200"></textarea>
+    </div>
+
+    <!-- Honeypot (spam trap) -->
+    <input type="text" name="company" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true" />
+
+    <button type="submit"
+      class="rounded-full bg-accent-600 px-6 py-3 text-sm font-semibold text-white transition hover:bg-accent-700 disabled:opacity-60">
+      Send Enquiry
+    </button>
+    <p id="form-status" role="status" aria-live="polite" class="hidden text-sm"></p>
+  </div>
+</form>
+
+<script>
+  const form = document.getElementById('enquiry-form') as HTMLFormElement | null;
+  if (form) {
+    const status = document.getElementById('form-status') as HTMLElement;
+    const setErr = (el: Element, show: boolean) => el.parentElement?.querySelector('.err')?.classList.toggle('hidden', !show);
+
+    const validate = () => {
+      let ok = true;
+      const name = form.querySelector<HTMLInputElement>('#f-name')!;
+      const phone = form.querySelector<HTMLInputElement>('#f-phone')!;
+      const email = form.querySelector<HTMLInputElement>('#f-email')!;
+      const prog = form.querySelector<HTMLSelectElement>('#f-programme')!;
+      const nameOk = name.value.trim().length > 1; setErr(name, !nameOk); ok &&= nameOk;
+      const phoneOk = /^[0-9+\-\s]{8,15}$/.test(phone.value.trim()); setErr(phone, !phoneOk); ok &&= phoneOk;
+      const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim()); setErr(email, !emailOk); ok &&= emailOk;
+      const progOk = prog.value !== ''; setErr(prog, !progOk); ok &&= progOk;
+      return ok;
+    };
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      status.className = 'hidden text-sm';
+      // Honeypot: silently succeed for bots
+      if ((form.querySelector('[name=company]') as HTMLInputElement)?.value) return;
+      if (!validate()) {
+        status.textContent = 'Please correct the highlighted fields.';
+        status.className = 'text-sm text-accent-600';
+        return;
+      }
+      const data = Object.fromEntries(new FormData(form).entries());
+      const endpoint = form.dataset.endpoint;
+
+      if (endpoint) {
+        try {
+          const btn = form.querySelector('button[type=submit]') as HTMLButtonElement;
+          btn.disabled = true;
+          const res = await fetch(endpoint, { method: 'POST', headers: { Accept: 'application/json' }, body: new FormData(form) });
+          btn.disabled = false;
+          if (!res.ok) throw new Error();
+          form.reset();
+          status.textContent = 'Thank you — your enquiry has been sent. Our coordinators will contact you shortly.';
+          status.className = 'text-sm text-brand-700';
+        } catch {
+          status.textContent = 'Something went wrong. Please call us, or email your enquiry directly.';
+          status.className = 'text-sm text-accent-600';
+        }
+      } else {
+        // Static fallback: compose an email
+        const subject = encodeURIComponent(`Admission Enquiry — ${data.programme}`);
+        const body = encodeURIComponent(
+          `Name: ${data.name}\nPhone: ${data.phone}\nEmail: ${data.email}\nProgramme: ${data.programme}\nNEET category: ${data.category || '-'}\nNEET-PG score/rank: ${data.score || '-'}\n\nMessage:\n${data.message || '-'}`,
+        );
+        window.location.href = `mailto:${form.dataset.mailto}?subject=${subject}&body=${body}`;
+        status.textContent = 'Opening your email app to send the enquiry…';
+        status.className = 'text-sm text-brand-700';
+      }
+    });
+  }
+</script>

@@ -1,0 +1,35 @@
+{
+  "name": "sanjeevan-pgi",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "Sanjeevan Medical Foundation Post Graduate Institute (Sanjeevan PGI) — official website",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "keystatic": "astro dev"
+  },
+  "dependencies": {
+    "@astrojs/mdx": "^4.2.6",
+    "@astrojs/rss": "^4.0.11",
+    "@astrojs/sitemap": "^3.3.1",
+    "@tailwindcss/vite": "^4.1.7",
+    "astro": "^5.8.0",
+    "sharp": "^0.34.1",
+    "tailwindcss": "^4.1.7"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.4",
+    "@astrojs/node": "^9.5.5",
+    "@astrojs/react": "^4.2.7",
+    "@keystatic/astro": "^5.0.5",
+    "@keystatic/core": "^0.5.47",
+    "@types/react": "^19.1.4",
+    "@types/react-dom": "^19.1.5",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "typescript": "^5.8.3"
+  }
+}

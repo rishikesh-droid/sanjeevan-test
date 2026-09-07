@@ -1,0 +1,20 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "astro",
+  "redirects": [
+    { "source": "/home", "destination": "/", "permanent": true },
+    { "source": "/about-us", "destination": "/about", "permanent": true },
+    { "source": "/ent-pg-admission-process", "destination": "/admissions/ms-ent", "permanent": true },
+    { "source": "/fellowship-admission-process", "destination": "/admissions/fellowship", "permanent": true },
+    { "source": "/ent-pg-teaching-staff", "destination": "/teaching-staff", "permanent": true },
+    { "source": "/fellowship-teaching-staff", "destination": "/teaching-staff", "permanent": true },
+    { "source": "/ent-pg-institute-students", "destination": "/students", "permanent": true },
+    { "source": "/fellowship-students", "destination": "/students", "permanent": true },
+    { "source": "/ent-pg-institute-gallery", "destination": "/gallery/campus-b", "permanent": true },
+    { "source": "/fellowship-gallery", "destination": "/gallery/campus-a", "permanent": true },
+    { "source": "/campus-a-general-department", "destination": "/gallery/campus-a", "permanent": true },
+    { "source": "/campus-b-ent", "destination": "/gallery/campus-b", "permanent": true },
+    { "source": "/contact-entpg", "destination": "/contact", "permanent": true },
+    { "source": "/contact-fellowship", "destination": "/contact", "permanent": true }
+  ]
+}

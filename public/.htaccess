@@ -1,0 +1,35 @@
+# --- Sanjeevan PGI static hosting (Apache / KnownHost) ---
+Options -Indexes
+ErrorDocument 404 /404.html
+
+# Force HTTPS + non-www (adjust if www is preferred)
+RewriteEngine On
+RewriteCond %{HTTPS} off [OR]
+RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+RewriteRule ^ https://sanjeevanpgi.com%{REQUEST_URI} [R=301,L]
+
+# 301 redirects: legacy WordPress slugs -> new IA (preserve SEO)
+Redirect 301 /about-us/                      /about
+Redirect 301 /ent-pg-admission-process/      /admissions/ms-ent
+Redirect 301 /fellowship-admission-process/  /admissions/fellowship
+Redirect 301 /ent-pg-teaching-staff/         /teaching-staff
+Redirect 301 /fellowship-teaching-staff/     /teaching-staff
+Redirect 301 /ent-pg-institute-students/     /students
+Redirect 301 /fellowship-students/           /students
+Redirect 301 /ent-pg-institute-gallery/      /gallery/campus-b
+Redirect 301 /fellowship-gallery/            /gallery/campus-a
+Redirect 301 /campus-a-general-department/   /gallery/campus-a
+Redirect 301 /campus-b-ent/                  /gallery/campus-b
+Redirect 301 /contact-entpg/                 /contact
+Redirect 301 /contact-fellowship/            /contact
+
+# Cache immutable, fingerprinted assets aggressively
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType image/webp "access plus 1 year"
+  ExpiresByType image/avif "access plus 1 year"
+  ExpiresByType image/jpeg "access plus 1 year"
+  ExpiresByType font/woff2 "access plus 1 year"
+  ExpiresByType text/css "access plus 1 year"
+  ExpiresByType application/javascript "access plus 1 year"
+</IfModule>

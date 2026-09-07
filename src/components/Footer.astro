@@ -1,0 +1,59 @@
+---
+import { site, nav } from '../config/site';
+const year = new Date().getFullYear();
+const c = site.contact;
+---
+
+<footer class="mt-24 border-t border-line bg-brand-950 text-brand-100">
+  <div class="container-page grid gap-10 py-14 md:grid-cols-2 lg:grid-cols-4">
+    <div class="lg:col-span-1">
+      <div class="flex items-center gap-3">
+        <img src={site.logo} alt={site.shortName} width="180" height="40" class="h-10 w-auto brightness-0 invert" />
+      </div>
+      <p class="mt-4 text-sm leading-relaxed text-brand-200">{site.legalName}</p>
+      <p class="mt-2 text-xs text-brand-300">Postgraduate ENT Institute · Established {site.established}</p>
+    </div>
+
+    <div>
+      <h3 class="text-sm font-semibold uppercase tracking-wider text-white">Explore</h3>
+      <ul class="mt-4 space-y-2 text-sm">
+        {nav.slice(1).map((n) => (
+          <li><a href={n.href} class="text-brand-200 transition hover:text-white">{n.label}</a></li>
+        ))}
+      </ul>
+    </div>
+
+    <div>
+      <h3 class="text-sm font-semibold uppercase tracking-wider text-white">Contact</h3>
+      <address class="mt-4 space-y-1 text-sm not-italic text-brand-200">
+        {c.addressLines.map((l) => <p>{l}</p>)}
+        <p class="pt-2">
+          {c.phones.map((p, i) => (
+            <>
+              <a href={`tel:${p.replace(/[^0-9+]/g, '')}`} class="hover:text-white">{p}</a>{i < c.phones.length - 1 ? ', ' : ''}
+            </>
+          ))}
+        </p>
+        <p><a href={`mailto:${c.email}`} class="hover:text-white">{c.email}</a></p>
+      </address>
+    </div>
+
+    <div>
+      <h3 class="text-sm font-semibold uppercase tracking-wider text-white">Admissions</h3>
+      <ul class="mt-4 space-y-2 text-sm">
+        <li><a href="/admissions/ms-ent" class="text-brand-200 hover:text-white">MS (ENT) Programme</a></li>
+        <li><a href="/admissions/fellowship" class="text-brand-200 hover:text-white">Fellowship Programmes</a></li>
+        <li><a href="/admissions#seat-matrix" class="text-brand-200 hover:text-white">Seat Matrix</a></li>
+        <li><a href="/admissions#fees" class="text-brand-200 hover:text-white">Fees</a></li>
+      </ul>
+      <a href="/contact#enquiry" class="mt-5 inline-block rounded-full bg-accent-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-accent-700">Admission Enquiry</a>
+    </div>
+  </div>
+
+  <div class="border-t border-brand-800">
+    <div class="container-page flex flex-col items-center justify-between gap-2 py-5 text-xs text-brand-300 sm:flex-row">
+      <p>© {year} {site.legalName}. All rights reserved.</p>
+      <p>Miraj, Maharashtra, India</p>
+    </div>
+  </div>
+</footer>

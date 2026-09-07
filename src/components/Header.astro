@@ -1,0 +1,119 @@
+---
+import { site, nav } from '../config/site';
+const pathname = Astro.url.pathname;
+const isActive = (href: string) =>
+  href === '/' ? pathname === '/' : pathname.startsWith(href.split('#')[0]);
+---
+
+<header class="sticky top-0 z-40 border-b border-line bg-surface/90 backdrop-blur supports-[backdrop-filter]:bg-surface/80">
+  <!-- Top utility bar -->
+  <div class="hidden bg-brand-950 text-brand-100 md:block">
+    <div class="container-page flex h-9 items-center justify-between text-xs">
+      <p class="tracking-wide">Postgraduate ENT Institute · Miraj · Since {site.established}</p>
+      <div class="flex items-center gap-4">
+        <a href={`tel:${site.contact.phones[0].replace(/[^0-9+]/g, '')}`} class="hover:text-white">☎ {site.contact.phones[0]}</a>
+        <a href={`mailto:${site.contact.email}`} class="hover:text-white">✉ {site.contact.email}</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="container-page flex h-18 items-center justify-between gap-4 py-2.5">
+    <a href="/" class="flex items-center gap-3" aria-label={`${site.shortName} — home`}>
+      <img src={site.logo} alt="" width="180" height="40" class="h-9 w-auto md:h-10" />
+      <span class="hidden flex-col leading-tight sm:flex">
+        <span class="font-display text-[15px] font-semibold text-brand-800">Sanjeevan PGI</span>
+        <span class="text-[11px] text-muted">Post Graduate Institute, Miraj</span>
+      </span>
+    </a>
+
+    <!-- Desktop nav -->
+    <nav class="hidden items-center gap-1 lg:flex" aria-label="Primary">
+      {nav.map((item) => (
+        <div class="group relative">
+          <a
+            href={item.href}
+            class:list={[
+              'flex items-center gap-1 whitespace-nowrap rounded-md px-3 py-2 text-sm font-medium leading-none transition-colors',
+              isActive(item.href) ? 'text-accent-600' : 'text-ink hover:text-brand-700',
+            ]}
+            aria-current={isActive(item.href) ? 'page' : undefined}
+          >
+            {item.label}
+            {item.children && (
+              <svg class="h-3 w-3 opacity-60 transition-transform group-hover:rotate-180" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            )}
+          </a>
+          {item.children && (
+            <div class="invisible absolute left-0 top-full z-10 min-w-56 translate-y-1 rounded-xl border border-line bg-surface p-2 opacity-0 shadow-[var(--shadow-card)] transition-all group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
+              {item.children.map((c) => (
+                <a href={c.href} class="block rounded-lg px-3 py-2 text-sm text-muted hover:bg-surface-2 hover:text-brand-700">{c.label}</a>
+              ))}
+            </div>
+          )}
+        </div>
+      ))}
+    </nav>
+
+    <div class="flex items-center gap-2">
+      <a href="/contact#enquiry" class="hidden whitespace-nowrap rounded-full bg-accent-600 px-5 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-accent-700 sm:inline-block">Admission Enquiry</a>
+      <!-- Mobile toggle -->
+      <button
+        id="nav-toggle"
+        class="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-line text-brand-800 lg:hidden"
+        aria-label="Open menu"
+        aria-expanded="false"
+        aria-controls="mobile-drawer"
+      >
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- Mobile drawer -->
+<div id="mobile-drawer" class="fixed inset-0 z-50 hidden lg:hidden" role="dialog" aria-modal="true" aria-label="Menu">
+  <div id="drawer-backdrop" class="absolute inset-0 bg-brand-950/50 backdrop-blur-sm"></div>
+  <div class="absolute right-0 top-0 flex h-full w-[86%] max-w-sm flex-col overflow-y-auto bg-surface shadow-xl">
+    <div class="flex items-center justify-between border-b border-line px-5 py-4">
+      <span class="font-display font-semibold text-brand-800">Menu</span>
+      <button id="nav-close" class="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-line" aria-label="Close menu">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <nav class="flex flex-col gap-1 p-4" aria-label="Mobile">
+      {nav.map((item) => (
+        <div>
+          <a href={item.href} class:list={['block rounded-lg px-3 py-2.5 font-medium', isActive(item.href) ? 'text-accent-600' : 'text-ink']}>{item.label}</a>
+          {item.children && (
+            <div class="ml-3 flex flex-col border-l border-line pl-3">
+              {item.children.map((c) => (
+                <a href={c.href} class="rounded-lg px-3 py-2 text-sm text-muted hover:text-brand-700">{c.label}</a>
+              ))}
+            </div>
+          )}
+        </div>
+      ))}
+      <a href="/contact#enquiry" class="mt-3 rounded-full bg-accent-600 px-4 py-2.5 text-center text-sm font-semibold text-white">Admission Enquiry</a>
+    </nav>
+  </div>
+</div>
+
+<script>
+  const drawer = document.getElementById('mobile-drawer');
+  const toggle = document.getElementById('nav-toggle');
+  const open = () => {
+    drawer?.classList.remove('hidden');
+    toggle?.setAttribute('aria-expanded', 'true');
+    document.body.style.overflow = 'hidden';
+  };
+  const close = () => {
+    drawer?.classList.add('hidden');
+    toggle?.setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = '';
+  };
+  toggle?.addEventListener('click', open);
+  document.getElementById('nav-close')?.addEventListener('click', close);
+  document.getElementById('drawer-backdrop')?.addEventListener('click', close);
+  drawer?.querySelectorAll('a').forEach((a) => a.addEventListener('click', close));
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+</script>

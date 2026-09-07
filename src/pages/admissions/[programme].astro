@@ -1,0 +1,68 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import { breadcrumbJsonLd } from '../../lib/seo';
+
+export async function getStaticPaths() {
+  const programmes = await getCollection('programmes');
+  return programmes
+    .filter((p) => !p.data.draft)
+    .map((p) => ({ params: { programme: p.id }, props: { entry: p } }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const d = entry.data;
+const crumbs = [
+  { name: 'Admissions', href: '/admissions' },
+  { name: d.shortTitle ?? d.title, href: `/admissions/${entry.id}` },
+];
+
+const courseLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Course',
+  name: d.title,
+  description: d.summary,
+  provider: { '@type': 'CollegeOrUniversity', name: 'Sanjeevan Medical Foundation Post Graduate Institute' },
+};
+---
+
+<BaseLayout title={d.title} description={d.summary} path={`/admissions/${entry.id}`}
+  jsonLd={[breadcrumbJsonLd(crumbs), courseLd]}>
+  <PageHero eyebrow="Programme" title={d.title} crumbs={crumbs} subtitle={d.summary} />
+
+  <div class="container-page grid gap-12 py-16 lg:grid-cols-[1.6fr_1fr]">
+    <article class="prose-block max-w-none">
+      <Content />
+    </article>
+
+    <aside class="space-y-6 self-start">
+      <div class="rounded-2xl border border-line bg-surface-2 p-6">
+        <h2 class="font-display text-lg font-semibold text-brand-900">Quick facts</h2>
+        <dl class="mt-4 space-y-3 text-sm">
+          <div class="flex justify-between gap-4"><dt class="text-muted">Degree</dt><dd class="font-semibold text-brand-800">{d.degree}</dd></div>
+          <div class="flex justify-between gap-4"><dt class="text-muted">Duration</dt><dd class="font-semibold text-brand-800">{d.duration}</dd></div>
+          {d.seats && <div class="flex justify-between gap-4"><dt class="text-muted">Seats</dt><dd class="font-semibold text-brand-800">{d.seats}</dd></div>}
+        </dl>
+      </div>
+
+      {d.eligibility.length > 0 && (
+        <div class="rounded-2xl border border-line bg-surface p-6 shadow-[var(--shadow-card)]">
+          <h2 class="font-display text-lg font-semibold text-brand-900">Eligibility</h2>
+          <ul class="mt-3 space-y-2 text-sm text-muted">
+            {d.eligibility.map((e) => (
+              <li class="flex gap-2"><span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accent-500"></span>{e}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      <div class="rounded-2xl bg-brand-950 p-6 text-white">
+        <h2 class="font-display text-lg font-semibold">Ready to apply?</h2>
+        <p class="mt-2 text-sm text-brand-200">Send an enquiry and our coordinators will help with the next steps.</p>
+        <a href="/contact#enquiry" class="mt-4 inline-block rounded-full bg-accent-600 px-5 py-2.5 text-sm font-semibold transition hover:bg-accent-700">Admission Enquiry</a>
+      </div>
+    </aside>
+  </div>
+</BaseLayout>

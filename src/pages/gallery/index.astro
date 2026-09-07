@@ -1,0 +1,36 @@
+---
+import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import { breadcrumbJsonLd } from '../../lib/seo';
+import { galleryImage } from '../../lib/images';
+
+const galleries = (await getCollection('galleries')).sort((a, b) => a.data.order - b.data.order);
+const crumbs = [{ name: 'Gallery', href: '/gallery' }];
+---
+
+<BaseLayout title="Gallery" path="/gallery"
+  description="Photo gallery of Sanjeevan PGI, Miraj — Campus A (General Department) and Campus B (ENT): hospital buildings, operation theatres, diagnostics and facilities."
+  jsonLd={[breadcrumbJsonLd(crumbs)]}>
+  <PageHero eyebrow="Gallery" title="Campus Gallery" crumbs={crumbs}
+    subtitle="Explore our two campuses — infrastructure, operation theatres, diagnostics, wards and academic facilities." />
+
+  <section class="container-page grid gap-8 py-16 md:grid-cols-2">
+    {galleries.map((g) => {
+      const cover = g.data.images[0] ? galleryImage(g.data.dir, g.data.images[0].file) : undefined;
+      return (
+        <a href={`/gallery/${g.data.slug}`} class="group relative overflow-hidden rounded-3xl border border-line shadow-[var(--shadow-card)]">
+          <div class="aspect-[16/10] overflow-hidden bg-brand-100">
+            {cover && <Image src={cover} alt="" width={900} height={560} class="h-full w-full object-cover transition duration-500 group-hover:scale-105" />}
+          </div>
+          <div class="absolute inset-0 bg-gradient-to-t from-brand-950/90 via-brand-950/20 to-transparent"></div>
+          <div class="absolute bottom-0 left-0 right-0 p-6 text-white">
+            <h2 class="font-display text-2xl font-semibold">{g.data.title}</h2>
+            <p class="mt-1 text-sm text-brand-100">{g.data.images.length} photographs</p>
+          </div>
+        </a>
+      );
+    })}
+  </section>
+</BaseLayout>

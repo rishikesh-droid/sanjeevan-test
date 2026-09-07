@@ -1,0 +1,197 @@
+{
+  "title": "Campus A — General Department",
+  "slug": "campus-a",
+  "subtitle": "Dr. D. K. Gosavi Memorial Shri Siddhivinayak Ganapati Cancer Hospital — hospital building, operation theatres, diagnostics, wards & facilities.",
+  "dir": "campus-a",
+  "order": 1,
+  "images": [
+    {
+      "file": "01-hospital-building.jpg",
+      "caption": "Hospital Building"
+    },
+    {
+      "file": "02-hospital-building.jpg",
+      "caption": "Hospital Building"
+    },
+    {
+      "file": "03-modular-operation-theatre.jpg",
+      "caption": "Modular Operation Theatre"
+    },
+    {
+      "file": "04-modular-operation-theatre.jpg",
+      "caption": "Modular Operation Theatre"
+    },
+    {
+      "file": "05-operation-theater.jpg",
+      "caption": "Operation Theater"
+    },
+    {
+      "file": "06-simple-operation-theatre.jpg",
+      "caption": "Simple Operation Theatre"
+    },
+    {
+      "file": "07-anesthesiology-department.webp",
+      "caption": "Anesthesiology Department"
+    },
+    {
+      "file": "08-anesthesia-workstation.jpg",
+      "caption": "Anesthesia Workstation"
+    },
+    {
+      "file": "09-biochemistry-lab.jpg",
+      "caption": "Biochemistry Lab"
+    },
+    {
+      "file": "10-clinical-pathology-lab.jpg",
+      "caption": "Clinical Pathology Lab"
+    },
+    {
+      "file": "11-cbc-machine.jpg",
+      "caption": "CBC Machine"
+    },
+    {
+      "file": "12-cbc-machine.jpg",
+      "caption": "CBC Machine"
+    },
+    {
+      "file": "13-clinical-microbiology.jpg",
+      "caption": "Clinical Microbiology"
+    },
+    {
+      "file": "14-pet-ct.jpg",
+      "caption": "PET-CT"
+    },
+    {
+      "file": "15-mri.webp",
+      "caption": "MRI"
+    },
+    {
+      "file": "16-histopathology.webp",
+      "caption": "Histopathology"
+    },
+    {
+      "file": "17-sonography-machine.jpeg",
+      "caption": "Sonography Machine"
+    },
+    {
+      "file": "18-cryotome.jpg",
+      "caption": "Cryotome"
+    },
+    {
+      "file": "19-automatic-ihc-staining-machine.jpg",
+      "caption": "Automatic Ihc Staining Machine"
+    },
+    {
+      "file": "20-microscope.jpg",
+      "caption": "Microscope"
+    },
+    {
+      "file": "21-radiology-cr-system.jpg",
+      "caption": "Radiology Cr System"
+    },
+    {
+      "file": "22-icu.webp",
+      "caption": "ICU"
+    },
+    {
+      "file": "23-sicu.jpg",
+      "caption": "SICU"
+    },
+    {
+      "file": "24-sicu.jpg",
+      "caption": "SICU"
+    },
+    {
+      "file": "25-surgical-icu.jpg",
+      "caption": "Surgical ICU"
+    },
+    {
+      "file": "26-sicu.jpg",
+      "caption": "SICU"
+    },
+    {
+      "file": "27-blood-bank-cross-match-facility.jpg",
+      "caption": "Blood Bank Cross Match Facility"
+    },
+    {
+      "file": "28-blood-bank.jpg",
+      "caption": "Blood Bank"
+    },
+    {
+      "file": "29-blood-donation-room.jpg",
+      "caption": "Blood Donation Room"
+    },
+    {
+      "file": "30-bmt.jpg",
+      "caption": "BMT"
+    },
+    {
+      "file": "31-medical-opd.jpg",
+      "caption": "Medical OPD"
+    },
+    {
+      "file": "32-opd.jpg",
+      "caption": "OPD"
+    },
+    {
+      "file": "33-opd-waiting-area.jpg",
+      "caption": "OPD Waiting Area"
+    },
+    {
+      "file": "34-opd-waiting-area.jpg",
+      "caption": "OPD Waiting Area"
+    },
+    {
+      "file": "35-female-ward.jpg",
+      "caption": "Female Ward"
+    },
+    {
+      "file": "36-female-ward.jpg",
+      "caption": "Female Ward"
+    },
+    {
+      "file": "37-male-ward.jpg",
+      "caption": "Male Ward"
+    },
+    {
+      "file": "38-male-ward.jpg",
+      "caption": "Male Ward"
+    },
+    {
+      "file": "39-private-patient-wing.jpg",
+      "caption": "Private Patient Wing"
+    },
+    {
+      "file": "40-private-room.jpg",
+      "caption": "Private Room"
+    },
+    {
+      "file": "41-private-room.jpg",
+      "caption": "Private Room"
+    },
+    {
+      "file": "42-ambulance-seva.jpg",
+      "caption": "Ambulance Seva"
+    },
+    {
+      "file": "43-board-room.jpg",
+      "caption": "Board Room"
+    },
+    {
+      "file": "44-library.jpg",
+      "caption": "Library"
+    },
+    {
+      "file": "45-library.jpg",
+      "caption": "Library"
+    },
+    {
+      "file": "46-dhyan-mandir.jpg",
+      "caption": "Dhyan Mandir"
+    },
+    {
+      "file": "47-seminar-hall.jpg",
+      "caption": "Seminar Hall"
+    }
+  ]
+}

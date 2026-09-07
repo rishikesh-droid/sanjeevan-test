@@ -1,0 +1,101 @@
+{
+  "title": "Campus B — ENT",
+  "slug": "campus-b",
+  "subtitle": "ENT Post Graduate Training Institute — ENT operation theatres, audiology, laboratories, wards & library.",
+  "dir": "campus-b",
+  "order": 2,
+  "images": [
+    {
+      "file": "01-hospital-building.jpg",
+      "caption": "Hospital Building"
+    },
+    {
+      "file": "02-hospital-building.jpg",
+      "caption": "Hospital Building"
+    },
+    {
+      "file": "03-clinical-laboratory.jpeg",
+      "caption": "Clinical Laboratory"
+    },
+    {
+      "file": "04-centrifuge-machine.jpeg",
+      "caption": "Centrifuge Machine"
+    },
+    {
+      "file": "05-cell-counter-machine.jpeg",
+      "caption": "Cell Counter Machine"
+    },
+    {
+      "file": "06-biochemistry-analyzer-machine.jpeg",
+      "caption": "Biochemistry Analyzer Machine"
+    },
+    {
+      "file": "07-audiology-speech-therapy.webp",
+      "caption": "Audiology Speech Therapy"
+    },
+    {
+      "file": "08-x-ray-department.jpg",
+      "caption": "X Ray Department"
+    },
+    {
+      "file": "09-naso-lab.webp",
+      "caption": "Naso Lab"
+    },
+    {
+      "file": "10-coblator-ii-cobilation-system.jpg",
+      "caption": "Coblator Ii Cobilation System"
+    },
+    {
+      "file": "11-micro-debrider.jpg",
+      "caption": "Micro Debrider"
+    },
+    {
+      "file": "12-opd.jpg",
+      "caption": "OPD"
+    },
+    {
+      "file": "13-reception-hall.webp",
+      "caption": "Reception Hall"
+    },
+    {
+      "file": "14-patients-waiting-hall.jpg",
+      "caption": "Patients Waiting Hall"
+    },
+    {
+      "file": "15-female-ward.jpeg",
+      "caption": "Female Ward"
+    },
+    {
+      "file": "16-male-ward.jpeg",
+      "caption": "Male Ward"
+    },
+    {
+      "file": "17-major-operation-theatre.jpg",
+      "caption": "Major Operation Theatre"
+    },
+    {
+      "file": "18-major-operation-theatre.jpg",
+      "caption": "Major Operation Theatre"
+    },
+    {
+      "file": "19-minor-operation-theatre.jpeg",
+      "caption": "Minor Operation Theatre"
+    },
+    {
+      "file": "20-private-room.jpg",
+      "caption": "Private Room"
+    },
+    {
+      "file": "21-private-room.jpeg",
+      "caption": "Private Room"
+    },
+    {
+      "file": "22-library.jpeg",
+      "caption": "Library"
+    },
+    {
+      "file": "23-library.jpg",
+      "caption": "Library"
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import FacultyCard from '../components/FacultyCard.astro';
+import { breadcrumbJsonLd } from '../lib/seo';
+
+const all = await getCollection('faculty');
+const ent = all.filter((f) => f.data.group === 'ent').sort((a, b) => a.data.order - b.data.order);
+const fellowship = all.filter((f) => f.data.group === 'fellowship').sort((a, b) => a.data.order - b.data.order);
+const crumbs = [{ name: 'Teaching Staff', href: '/teaching-staff' }];
+
+const groups = [
+  { title: 'ENT Post Graduate Institute', note: 'MS (ENT) faculty', people: ent },
+  { title: 'Fellowship Faculty', note: 'Onco-Pathology & Head and Neck Cancer Surgery', people: fellowship },
+];
+---
+
+<BaseLayout title="Teaching Staff" path="/teaching-staff"
+  description="Meet the ENT and Fellowship faculty of Sanjeevan PGI, Miraj — professors, associate professors and consultants across ENT, surgical oncology and pathology."
+  jsonLd={[breadcrumbJsonLd(crumbs)]}>
+  <PageHero eyebrow="Faculty" title="Teaching Staff" crumbs={crumbs}
+    subtitle="Experienced clinicians, surgeons and educators guiding our postgraduate trainees." />
+
+  {groups.map((g) => (
+    <section class="container-page py-14">
+      <div class="flex items-end justify-between gap-4 border-b border-line pb-4">
+        <div>
+          <h2 class="font-display text-2xl font-semibold text-brand-900">{g.title}</h2>
+          <p class="mt-1 text-sm text-muted">{g.note}</p>
+        </div>
+        <span class="rounded-full bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-700">{g.people.length} members</span>
+      </div>
+      <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {g.people.map((f) => (
+          <FacultyCard name={f.data.name} designation={f.data.designation} qualifications={f.data.qualifications} specialty={f.data.specialty} photo={f.data.photo} />
+        ))}
+      </div>
+    </section>
+  ))}
+</BaseLayout>

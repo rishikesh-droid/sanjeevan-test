@@ -1,0 +1,42 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import { breadcrumbJsonLd } from '../../lib/seo';
+
+export async function getStaticPaths() {
+  const notices = await getCollection('notices');
+  return notices
+    .filter((n) => !n.data.draft)
+    .map((n) => ({ params: { id: n.id }, props: { entry: n } }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const d = entry.data;
+const crumbs = [
+  { name: 'Notices', href: '/notices' },
+  { name: d.title, href: `/notices/${entry.id}` },
+];
+const dateFmt = (dt: Date) => dt.toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' });
+---
+
+<BaseLayout title={d.title} description={d.summary} path={`/notices/${entry.id}`}
+  jsonLd={[breadcrumbJsonLd(crumbs)]}>
+  <PageHero eyebrow={d.category} title={d.title} crumbs={crumbs} />
+
+  <article class="container-page max-w-3xl py-16">
+    <p class="text-sm text-muted">Published {dateFmt(d.date)}</p>
+    <div class="prose-block mt-6">
+      <Content />
+    </div>
+    {d.pdf && (
+      <a href={d.pdf} target="_blank" rel="noopener"
+        class="mt-8 inline-flex items-center gap-2 rounded-full bg-brand-800 px-6 py-3 text-sm font-semibold text-white transition hover:bg-brand-900">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Download official PDF
+      </a>
+    )}
+    <div class="mt-10"><a href="/notices" class="text-sm font-semibold text-brand-700 hover:text-accent-600">← Back to all notices</a></div>
+  </article>
+</BaseLayout>

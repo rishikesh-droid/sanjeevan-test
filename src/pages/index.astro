@@ -1,0 +1,216 @@
+---
+import { getCollection, getEntry, render } from 'astro:content';
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import FacultyCard from '../components/FacultyCard.astro';
+import { site } from '../config/site';
+import heroImg from '../assets/campus/ashwini-prasad.jpg';
+
+const recognitions = (await getCollection('recognitions')).sort((a, b) => a.data.order - b.data.order);
+const programmes = (await getCollection('programmes')).sort((a, b) => a.data.order - b.data.order);
+const faculty = (await getCollection('faculty'))
+  .filter((f) => f.data.group === 'ent')
+  .sort((a, b) => a.data.order - b.data.order)
+  .slice(0, 4);
+const notices = (await getCollection('notices'))
+  .filter((n) => !n.data.draft)
+  .sort((a, b) => +b.data.date - +a.data.date)
+  .slice(0, 4);
+
+const intro = await getEntry('pages', 'home-intro');
+const { Content: Intro } = intro ? await render(intro) : { Content: null };
+
+const dateFmt = (d: Date) => d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+---
+
+<BaseLayout title={site.shortName} path="/">
+  <!-- HERO -->
+  <section class="relative overflow-hidden bg-brand-950 text-white">
+    <div class="absolute inset-0">
+      <Image src={heroImg} alt="Sanjeevan PGI institute building, Miraj" width={1920} height={1080} class="h-full w-full object-cover object-[center_35%]" loading="eager" fetchpriority="high" />
+      <!-- Legibility scrim: strong navy behind the text on the left, fading to
+           near-clear on the right so the building stays clearly visible.
+           A soft bottom fade keeps text legible on narrow screens. -->
+      <div class="absolute inset-0 bg-gradient-to-r from-brand-950 from-15% via-brand-950/75 via-55% to-brand-950/10"></div>
+      <div class="absolute inset-0 bg-gradient-to-t from-brand-950/60 via-transparent to-transparent lg:hidden"></div>
+    </div>
+    <div class="container-page relative py-20 md:py-28 lg:py-32">
+      <p class="mb-4 inline-flex items-center gap-2 rounded-full border border-brand-700 bg-brand-900/60 px-4 py-1.5 text-xs font-medium uppercase tracking-[0.18em] text-brand-100">
+        <span class="h-1.5 w-1.5 rounded-full bg-accent-500"></span> {site.tagline}
+      </p>
+      <h1 class="max-w-4xl font-display text-4xl font-semibold leading-[1.08] md:text-6xl">
+        Sanjeevan Medical Foundation<br class="hidden md:block" /> Post Graduate Institute
+      </h1>
+      <p class="mt-6 max-w-2xl text-lg text-brand-100">
+        A dedicated postgraduate institute for <strong class="text-white">ENT (Otorhinolaryngology)</strong> at Miraj —
+        offering NMC-recognised MS (ENT) and MUHS-affiliated Fellowship programmes since {site.established}.
+      </p>
+      <div class="mt-9 flex flex-wrap gap-3">
+        <a href="/contact#enquiry" class="rounded-full bg-accent-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-accent-900/30 transition hover:bg-accent-700">Admission Enquiry</a>
+        <a href="/admissions" class="rounded-full border border-brand-600 bg-brand-900/40 px-6 py-3 text-sm font-semibold text-white transition hover:bg-brand-800">Explore Admissions</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRUST STRIP -->
+  <section aria-label="Recognitions and affiliations" class="border-b border-line bg-surface-2">
+    <div class="container-page py-8">
+      <p class="text-center text-xs font-semibold uppercase tracking-[0.18em] text-brand-400">Recognised & Affiliated By</p>
+      <div class="mt-5 flex flex-wrap items-center justify-center gap-x-8 gap-y-3">
+        {recognitions.map((r) => (
+          <span class="text-sm font-semibold text-brand-700">{r.data.abbr ?? r.data.name}</span>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- INTRO + STATS -->
+  <section class="container-page grid gap-12 py-20 lg:grid-cols-[1.4fr_1fr]">
+    <div data-reveal>
+      <p class="text-xs font-semibold uppercase tracking-[0.2em] text-accent-600">About the Institute</p>
+      <div class="prose-block mt-4 max-w-none text-lg">
+        {Intro && <Intro />}
+      </div>
+      <a href="/about" class="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-700 hover:text-accent-600">Read our history →</a>
+    </div>
+    <div data-reveal class="grid grid-cols-2 gap-4 self-start">
+      {[
+        { n: '1984', l: 'Established' },
+        { n: '3', l: 'MS (ENT) seats / year' },
+        { n: '2', l: 'Campuses' },
+        { n: '13+', l: 'Faculty & consultants' },
+      ].map((s) => (
+        <div class="rounded-2xl border border-line bg-surface p-6 shadow-[var(--shadow-card)]">
+          <p class="font-display text-3xl font-semibold text-brand-800 md:text-4xl">{s.n}</p>
+          <p class="mt-1 text-sm text-muted">{s.l}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- PROGRAMMES -->
+  <section class="bg-surface-2 py-20">
+    <div class="container-page">
+      <div class="max-w-2xl">
+        <p class="text-xs font-semibold uppercase tracking-[0.2em] text-accent-600">Programmes</p>
+        <h2 class="mt-3 font-display text-3xl font-semibold text-brand-900 md:text-4xl">Postgraduate training in ENT & allied super-specialities</h2>
+      </div>
+      <div class="mt-10 grid gap-6 md:grid-cols-2">
+        {programmes.map((p) => (
+          <a href={p.data.shortTitle === 'MS (ENT)' ? '/admissions/ms-ent' : '/admissions/fellowship'} data-reveal
+             class="group flex flex-col rounded-2xl border border-line bg-surface p-7 shadow-[var(--shadow-card)] transition hover:-translate-y-1 hover:border-brand-300">
+            <div class="flex items-center justify-between">
+              <h3 class="font-display text-xl font-semibold text-brand-900">{p.data.title}</h3>
+              <span class="rounded-full bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-700">{p.data.duration}</span>
+            </div>
+            <p class="mt-3 flex-1 text-sm leading-relaxed text-muted">{p.data.summary}</p>
+            <span class="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-accent-600">View programme →</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- SEAT MATRIX + FEES SNAPSHOT -->
+  <section class="container-page py-20">
+    <div class="flex flex-wrap items-end justify-between gap-4">
+      <div class="max-w-2xl">
+        <p class="text-xs font-semibold uppercase tracking-[0.2em] text-accent-600">Admissions 2025–26</p>
+        <h2 class="mt-3 font-display text-3xl font-semibold text-brand-900 md:text-4xl">PG seats & fees at a glance</h2>
+      </div>
+      <a href="/admissions" class="text-sm font-semibold text-brand-700 hover:text-accent-600">Full admissions details →</a>
+    </div>
+
+    <div class="mt-10 grid gap-6 lg:grid-cols-[1.2fr_1fr]">
+      <!-- Seat matrix snapshot -->
+      <div data-reveal class="overflow-hidden rounded-2xl border border-line bg-surface shadow-[var(--shadow-card)]">
+        <div class="flex items-center justify-between border-b border-line bg-surface-2 px-6 py-4">
+          <h3 class="font-display text-lg font-semibold text-brand-900">MS (ENT) — PG Seats</h3>
+          <span class="rounded-full bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-700">A.Y. 2025–26</span>
+        </div>
+        <div class="grid grid-cols-2 gap-px bg-line sm:grid-cols-4">
+          {[
+            { n: '3', l: 'Total sanctioned' },
+            { n: '1', l: 'Management' },
+            { n: '1', l: 'NEET-PG · OBC' },
+            { n: '1', l: 'NEET-PG · Open' },
+          ].map((s) => (
+            <div class="bg-surface px-5 py-6 text-center">
+              <p class="font-display text-3xl font-semibold text-brand-800">{s.n}</p>
+              <p class="mt-1 text-xs text-muted">{s.l}</p>
+            </div>
+          ))}
+        </div>
+        <div class="px-6 py-3 text-xs text-muted">Filled through NEET-PG / State CET · Recognised by NMC/MCI.</div>
+      </div>
+
+      <!-- Fees snapshot -->
+      <div data-reveal class="rounded-2xl border border-line bg-surface p-6 shadow-[var(--shadow-card)]">
+        <h3 class="font-display text-lg font-semibold text-brand-900">MS (ENT) — Fee highlights</h3>
+        <ul class="mt-4 space-y-2.5 text-sm">
+          {[
+            { k: 'Tuition Fee', v: '₹ 9,57,500' },
+            { k: 'Management Fees', v: '₹ 28,72,500' },
+            { k: 'NRI Seat Fees', v: '₹ 38,30,000' },
+          ].map((f) => (
+            <li class="flex justify-between gap-4 border-b border-line pb-2 last:border-0">
+              <span class="text-muted">{f.k}</span><span class="font-semibold text-brand-800">{f.v}</span>
+            </li>
+          ))}
+        </ul>
+        <p class="mt-3 text-xs text-muted">As per Fees Regulating Authority (FRA), Maharashtra.</p>
+        <a href="/admissions#fees" class="mt-4 inline-block rounded-full bg-brand-800 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-900">View full fee structure</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FACULTY HIGHLIGHT -->
+  <section class="container-page py-20">
+    <div class="flex flex-wrap items-end justify-between gap-4">
+      <div class="max-w-2xl">
+        <p class="text-xs font-semibold uppercase tracking-[0.2em] text-accent-600">Teaching Staff</p>
+        <h2 class="mt-3 font-display text-3xl font-semibold text-brand-900 md:text-4xl">Learn from experienced ENT faculty</h2>
+      </div>
+      <a href="/teaching-staff" class="text-sm font-semibold text-brand-700 hover:text-accent-600">All faculty →</a>
+    </div>
+    <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      {faculty.map((f) => (
+        <FacultyCard name={f.data.name} designation={f.data.designation} qualifications={f.data.qualifications} specialty={f.data.specialty} photo={f.data.photo} />
+      ))}
+    </div>
+  </section>
+
+  <!-- NOTICES -->
+  <section class="bg-brand-950 py-20 text-white">
+    <div class="container-page grid gap-10 lg:grid-cols-[1fr_1.3fr]">
+      <div>
+        <p class="text-xs font-semibold uppercase tracking-[0.2em] text-accent-300">Notices & Circulars</p>
+        <h2 class="mt-3 font-display text-3xl font-semibold md:text-4xl">Latest announcements</h2>
+        <p class="mt-4 text-brand-100">Admission dates, results, affiliation documents and official circulars.</p>
+        <a href="/notices" class="mt-6 inline-block rounded-full border border-brand-600 px-5 py-2.5 text-sm font-semibold transition hover:bg-brand-800">View all notices</a>
+      </div>
+      <ul class="divide-y divide-brand-800 border-t border-brand-800">
+        {notices.map((n) => (
+          <li>
+            <a href={`/notices/${n.id}`} class="flex items-start gap-4 py-4 transition hover:bg-brand-900/40">
+              <span class="mt-0.5 whitespace-nowrap rounded-md bg-brand-900 px-2.5 py-1 text-xs font-medium text-brand-200">{n.data.category}</span>
+              <span class="flex-1">
+                <span class="block font-medium text-white">{n.data.title}</span>
+                <span class="mt-0.5 block text-xs text-brand-300">{dateFmt(n.data.date)}</span>
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- ENQUIRY CTA -->
+  <section class="container-page py-20">
+    <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-brand-800 to-brand-950 px-8 py-14 text-center text-white md:px-16">
+      <h2 class="font-display text-3xl font-semibold md:text-4xl">Considering postgraduate ENT training?</h2>
+      <p class="mx-auto mt-4 max-w-2xl text-brand-100">Send us an enquiry and our admissions coordinators will guide you through eligibility, the seat matrix, fees and the application process.</p>
+      <a href="/contact#enquiry" class="mt-8 inline-block rounded-full bg-accent-600 px-8 py-3.5 text-sm font-semibold shadow-lg transition hover:bg-accent-700">Start your Admission Enquiry</a>
+    </div>
+  </section>
+</BaseLayout>

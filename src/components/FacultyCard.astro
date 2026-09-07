@@ -1,0 +1,30 @@
+---
+import { Image } from 'astro:assets';
+import { facultyPhoto, initials } from '../lib/images';
+export interface Props {
+  name: string;
+  designation: string;
+  qualifications: string;
+  specialty?: string;
+  photo?: string;
+}
+const { name, designation, qualifications, specialty, photo } = Astro.props;
+const img = facultyPhoto(photo);
+---
+<article data-reveal class="group flex flex-col overflow-hidden rounded-2xl border border-line bg-surface shadow-[var(--shadow-card)] transition hover:-translate-y-1">
+  <div class="relative aspect-[4/5] overflow-hidden bg-brand-50">
+    {img ? (
+      <Image src={img} alt={`Photograph of ${name}`} width={520} height={650} class="h-full w-full object-cover object-top transition duration-500 group-hover:scale-[1.03]" />
+    ) : (
+      <div class="flex h-full w-full items-center justify-center bg-gradient-to-br from-brand-100 to-brand-200">
+        <span class="font-display text-4xl font-semibold text-brand-500">{initials(name)}</span>
+      </div>
+    )}
+  </div>
+  <div class="flex flex-1 flex-col p-5">
+    <h3 class="font-display text-lg font-semibold text-brand-900">{name}</h3>
+    <p class="mt-1 text-sm font-medium text-accent-600">{designation}</p>
+    <p class="mt-2 text-sm text-muted">{qualifications}</p>
+    {specialty && <p class="mt-auto pt-3 text-xs uppercase tracking-wide text-brand-400">{specialty}</p>}
+  </div>
+</article>
