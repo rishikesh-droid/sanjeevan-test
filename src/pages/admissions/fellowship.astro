@@ -1,0 +1,167 @@
+---
+import { getCollection, getEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import FacultyCard from '../../components/FacultyCard.astro';
+import { site } from '../../config/site';
+import { breadcrumbJsonLd } from '../../lib/seo';
+
+const entry = await getEntry('programmes', 'fellowship');
+const d = entry!.data;
+const crumbs = [
+  { name: 'Admissions', href: '/admissions' },
+  { name: 'Fellowship', href: '/admissions/fellowship' },
+];
+
+const fellowshipFaculty = (await getCollection('faculty'))
+  .filter((f) => f.data.group === 'fellowship')
+  .sort((a, b) => a.data.order - b.data.order);
+
+const f = site.fellowshipContact;
+
+// Fellowship courses — MUHS-affiliated (Dr. D. K. Gosavi Memorial Shri
+// Siddhivinayak Ganapati Cancer Hospital, Miraj).
+const courses = [
+  {
+    name: 'Onco-Pathology',
+    duration: '1 Year',
+    session: '1 Aug – 31 Jul',
+    seats: 1,
+    fee: '₹ 1,00,000',
+    eligibility: 'MD (Pathology) / DNB (Pathology)',
+  },
+  {
+    name: 'Head & Neck Cancer Surgery',
+    duration: '1 Year',
+    session: '1 Aug – 31 Jul',
+    seats: 2,
+    fee: '₹ 1,00,000',
+    eligibility: 'MS (ENT) / DNB (ENT)',
+  },
+];
+
+const facts = [
+  { k: 'Duration', v: '1 Year' },
+  { k: 'Session', v: '1 Aug – 31 Jul' },
+  { k: 'University', v: 'MUHS, Nashik' },
+  { k: 'Total fee', v: '₹ 1,00,000' },
+];
+
+const courseLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Course',
+  name: d.title,
+  description: d.summary,
+  provider: { '@type': 'CollegeOrUniversity', name: 'Sanjeevan Medical Foundation ENT Post Graduate Training Institute' },
+};
+---
+
+<BaseLayout title={d.title} description={d.summary} path="/admissions/fellowship"
+  jsonLd={[breadcrumbJsonLd(crumbs), courseLd]}>
+  <PageHero eyebrow="Programme" title="Fellowship Programmes" crumbs={crumbs} subtitle={d.summary} />
+
+  <!-- Intro + facts -->
+  <section class="container-page grid gap-10 py-16 lg:grid-cols-[1.5fr_1fr]">
+    <div>
+      <h2 class="font-display text-2xl font-semibold text-brand-900">About the fellowships</h2>
+      <p class="mt-4 text-muted">
+        Sanjeevan Medical Foundation's <strong class="text-ink">Dr. D. K. Gosavi Memorial Shri Siddhivinayak
+        Ganapati Cancer Hospital, Miraj</strong> offers one-year fellowship courses affiliated to the
+        <strong class="text-ink">Maharashtra University of Health Sciences (MUHS), Nashik</strong>, in
+        Onco-Pathology and Head &amp; Neck Cancer Surgery.
+      </p>
+    </div>
+    <dl class="grid grid-cols-2 gap-4 self-start">
+      {facts.map((s) => (
+        <div data-reveal class="rounded-2xl border border-line bg-surface-2 p-5">
+          <dt class="text-xs uppercase tracking-wide text-muted">{s.k}</dt>
+          <dd class="mt-1 font-display text-xl font-semibold text-brand-800">{s.v}</dd>
+        </div>
+      ))}
+    </dl>
+  </section>
+
+  <!-- Course cards -->
+  <section class="bg-surface-2 py-16">
+    <div class="container-page">
+      <h2 class="font-display text-2xl font-semibold text-brand-900">Courses &amp; seats</h2>
+      <div class="mt-8 grid gap-6 md:grid-cols-2">
+        {courses.map((c) => (
+          <article data-reveal class="flex flex-col rounded-2xl border border-line bg-surface p-7 shadow-[var(--shadow-card)] transition duration-300 hover:-translate-y-1 hover:border-brand-300">
+            <div class="flex items-start justify-between gap-3">
+              <h3 class="font-display text-xl font-semibold text-brand-900">{c.name}</h3>
+              <span class="whitespace-nowrap rounded-full bg-accent-50 px-3 py-1 text-xs font-semibold text-accent-700">{c.seats} {c.seats === 1 ? 'seat' : 'seats'}</span>
+            </div>
+            <dl class="mt-5 grid grid-cols-2 gap-4 text-sm">
+              <div><dt class="text-muted">Duration</dt><dd class="font-semibold text-brand-800">{c.duration}</dd></div>
+              <div><dt class="text-muted">Session</dt><dd class="font-semibold text-brand-800">{c.session}</dd></div>
+              <div><dt class="text-muted">Total fees</dt><dd class="font-semibold text-brand-800">{c.fee}</dd></div>
+              <div><dt class="text-muted">Seats</dt><dd class="font-semibold text-brand-800">{c.seats}</dd></div>
+            </dl>
+            <div class="mt-5 border-t border-line pt-4">
+              <p class="text-xs font-semibold uppercase tracking-wide text-brand-400">Eligibility</p>
+              <p class="mt-1 text-sm text-muted">{c.eligibility}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Admission -->
+  <section class="container-page py-16">
+    <div class="grid gap-8 lg:grid-cols-[1.3fr_1fr]">
+      <div>
+        <h2 class="font-display text-2xl font-semibold text-brand-900">Admission</h2>
+        <p class="mt-4 text-muted">
+          Admission is through the <strong class="text-ink">centralised admission process by MUHS, Nashik</strong>.
+        </p>
+        <div class="mt-6 rounded-2xl border border-line bg-surface-2 p-6">
+          <p class="text-xs font-semibold uppercase tracking-wide text-brand-400">For admission enquiries</p>
+          <p class="mt-2 font-semibold text-brand-900">The Registrar, Maharashtra University of Health Sciences</p>
+          <p class="text-sm text-muted">Vani–Dindori Road, Mhasrul, Nashik 422 004</p>
+          <a href="https://www.muhs.ac.in" target="_blank" rel="noopener" class="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-700 hover:text-accent-600">www.muhs.ac.in →</a>
+        </div>
+        <p class="mt-5 rounded-xl border border-accent-100 bg-accent-50 px-5 py-4 text-sm text-brand-800">
+          <strong>Note:</strong> The institution has also applied for fellowship courses in Medical Oncology and Onco-Anaesthesia.
+        </p>
+      </div>
+
+      <aside class="space-y-6">
+        <div class="rounded-2xl border border-line bg-surface p-6 shadow-[var(--shadow-card)]">
+          <h3 class="font-display text-lg font-semibold text-brand-900">Fellowship Cancer Hospital</h3>
+          <p class="mt-2 text-sm text-muted">{f.name}</p>
+          <address class="mt-2 space-y-0.5 text-sm not-italic text-muted">
+            {f.addressLines.map((l) => <p>{l}</p>)}
+          </address>
+          <dl class="mt-3 space-y-1.5 text-sm">
+            <div class="flex gap-2"><dt class="w-14 shrink-0 font-semibold text-brand-800">Phone</dt><dd><a href={`tel:${f.phones[0].replace(/[^0-9+]/g,'')}`} class="text-brand-700 hover:text-accent-600">{f.phones[0]}</a></dd></div>
+            <div class="flex gap-2"><dt class="w-14 shrink-0 font-semibold text-brand-800">Email</dt><dd><a href={`mailto:${f.email}`} class="text-brand-700 hover:text-accent-600">{f.email}</a></dd></div>
+          </dl>
+        </div>
+        <div class="rounded-2xl bg-brand-950 p-6 text-white">
+          <h3 class="font-display text-lg font-semibold">Have a question?</h3>
+          <p class="mt-2 text-sm text-brand-200">Contact our coordinators for help with the fellowship admission process.</p>
+          <a href="/contact" class="mt-4 inline-block rounded-full bg-accent-600 px-5 py-2.5 text-sm font-semibold transition hover:bg-accent-700">Contact Us</a>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- Fellowship faculty -->
+  {fellowshipFaculty.length > 0 && (
+    <section class="bg-surface-2 py-16">
+      <div class="container-page">
+        <div class="flex flex-wrap items-end justify-between gap-4">
+          <h2 class="font-display text-2xl font-semibold text-brand-900">Fellowship faculty</h2>
+          <a href="/teaching-staff" class="text-sm font-semibold text-brand-700 hover:text-accent-600">All teaching staff →</a>
+        </div>
+        <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {fellowshipFaculty.map((p) => (
+            <FacultyCard name={p.data.name} designation={p.data.designation} qualifications={p.data.qualifications} specialty={p.data.specialty} photo={p.data.photo} focus={p.data.focus} />
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+</BaseLayout>

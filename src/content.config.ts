@@ -19,6 +19,7 @@ const faculty = defineCollection({
     specialty: z.string().optional(),
     group: z.enum(['ent', 'fellowship']),
     photo: z.string().optional(), // filename in src/assets/faculty
+    focus: z.string().optional(), // CSS object-position for the photo (e.g. 'center', '50% 30%')
     registration: z.string().optional(),
     experience: z.string().optional(),
     employment: z.string().optional(),
@@ -73,7 +74,11 @@ const students = defineCollection({
     programme: z.string(),
     group: z.enum(['ent', 'fellowship']).default('ent'),
     members: z.array(
-      z.object({ name: z.string(), note: z.string().optional() }),
+      z.object({
+        name: z.string(),
+        note: z.string().optional(),
+        photo: z.string().optional(), // filename in src/assets/students
+      }),
     ),
     order: z.number().default(99),
   }),

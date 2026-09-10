@@ -1,9 +1,10 @@
 ---
 import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHero from '../components/PageHero.astro';
 import { breadcrumbJsonLd } from '../lib/seo';
-import { initials } from '../lib/images';
+import { studentPhoto, initials } from '../lib/images';
 
 const batches = (await getCollection('students')).sort((a, b) => a.data.order - b.data.order);
 const ent = batches.filter((b) => b.data.group === 'ent');
@@ -19,21 +20,33 @@ const crumbs = [{ name: 'Students', href: '/students' }];
 
   <section class="container-page py-16">
     <h2 class="font-display text-2xl font-semibold text-brand-900">MS (ENT) — Students on Roll</h2>
-    <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+
+    <div class="mt-8 space-y-12">
       {ent.map((b) => (
-        <div data-reveal class="rounded-2xl border border-line bg-surface p-6 shadow-[var(--shadow-card)]">
-          <div class="flex items-center justify-between">
+        <div>
+          <div class="flex items-center gap-3">
             <h3 class="font-display text-lg font-semibold text-brand-900">{b.data.batch}</h3>
             <span class="rounded-full bg-accent-50 px-2.5 py-1 text-xs font-semibold text-accent-700">{b.data.programme}</span>
           </div>
-          <ul class="mt-4 space-y-3">
-            {b.data.members.map((m) => (
-              <li class="flex items-center gap-3">
-                <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-brand-100 text-xs font-semibold text-brand-700">{initials(m.name)}</span>
-                <span class="text-sm font-medium text-brand-800">{m.name}</span>
-              </li>
-            ))}
-          </ul>
+          <div class="mt-5 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {b.data.members.map((m) => {
+              const img = studentPhoto(m.photo);
+              return (
+                <article data-reveal class="group flex flex-col items-center rounded-2xl border border-line bg-surface p-6 text-center shadow-[var(--shadow-card)] transition duration-300 hover:-translate-y-1 hover:border-brand-300">
+                  <div class="h-32 w-32 shrink-0 overflow-hidden rounded-full bg-brand-50 ring-1 ring-line ring-offset-2 ring-offset-surface">
+                    {img ? (
+                      <Image src={img} alt={`Photograph of ${m.name}`} width={256} height={256} class="h-full w-full object-cover object-center transition duration-500 group-hover:scale-105" />
+                    ) : (
+                      <div class="flex h-full w-full items-center justify-center bg-gradient-to-br from-brand-100 to-brand-200">
+                        <span class="font-display text-2xl font-semibold text-brand-500">{initials(m.name)}</span>
+                      </div>
+                    )}
+                  </div>
+                  <p class="mt-4 text-sm font-semibold text-brand-800">{m.name}</p>
+                </article>
+              );
+            })}
+          </div>
         </div>
       ))}
     </div>
@@ -43,16 +56,23 @@ const crumbs = [{ name: 'Students', href: '/students' }];
     <section class="bg-surface-2 py-16">
       <div class="container-page">
         <h2 class="font-display text-2xl font-semibold text-brand-900">Fellowship — Trainees on Roll</h2>
-        <div class="mt-8 grid gap-6 sm:grid-cols-2">
-          {fellowship.flatMap((b) => b.data.members).map((m) => (
-            <div class="flex items-center gap-4 rounded-2xl border border-line bg-surface p-5 shadow-[var(--shadow-card)]">
-              <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-brand-100 text-sm font-semibold text-brand-700">{initials(m.name)}</span>
-              <div>
-                <p class="font-semibold text-brand-900">{m.name}</p>
-                {m.note && <p class="text-sm text-muted">{m.note}</p>}
+        <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {fellowship.flatMap((b) => b.data.members).map((m) => {
+            const img = studentPhoto(m.photo);
+            return (
+              <div class="flex items-center gap-4 rounded-2xl border border-line bg-surface p-5 shadow-[var(--shadow-card)]">
+                {img ? (
+                  <Image src={img} alt={`Photograph of ${m.name}`} width={112} height={112} class="h-14 w-14 shrink-0 rounded-full object-cover object-center" />
+                ) : (
+                  <span class="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-brand-100 text-sm font-semibold text-brand-700">{initials(m.name)}</span>
+                )}
+                <div>
+                  <p class="font-semibold text-brand-900">{m.name}</p>
+                  {m.note && <p class="text-sm text-muted">{m.note}</p>}
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>

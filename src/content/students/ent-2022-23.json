@@ -5,13 +5,16 @@
   "order": 1,
   "members": [
     {
-      "name": "Dr. Aishwarya Kachare"
+      "name": "Dr. Aishwarya Kachare",
+      "photo": "aishwarya-kachare.webp"
     },
     {
-      "name": "Dr. Anushka Patil"
+      "name": "Dr. Anushka Patil",
+      "photo": "anushka-patil.webp"
     },
     {
-      "name": "Dr. Avani Joglekar"
+      "name": "Dr. Avani Joglekar",
+      "photo": "avani-joglekar.webp"
     }
   ]
 }

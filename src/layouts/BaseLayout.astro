@@ -14,6 +14,9 @@ export interface Props {
   jsonLd?: unknown[];
   ogImage?: string;
   noindex?: boolean;
+  /** Header floats transparently over a dark hero, turning solid on scroll.
+      Set false for pages whose top section is light (e.g. 404). */
+  overlayHeader?: boolean;
 }
 
 const {
@@ -23,6 +26,7 @@ const {
   jsonLd = [],
   ogImage = '/brand/logo.png',
   noindex = false,
+  overlayHeader = true,
 } = Astro.props;
 
 const canonical = new URL(path ?? Astro.url.pathname, site.url).href;
@@ -72,22 +76,28 @@ const graphs = [organizationJsonLd(), ...jsonLd];
       class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-brand-800 focus:px-4 focus:py-2 focus:text-white"
       >Skip to content</a
     >
-    <Header />
-    <main id="main">
+    <Header overlay={overlayHeader} />
+    <main id="main" class:list={[!overlayHeader && 'pt-[72px] md:pt-[108px]']}>
       <slot />
     </main>
     <Footer />
 
-    <!-- Subtle scroll reveals + Lenis smooth scroll, both gated on reduced-motion -->
+    <!-- Tasteful, dependency-free micro-animations — all gated on reduced-motion.
+         Native scroll is used throughout (no scroll-jacking library). -->
     <script>
       const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-      // Scroll reveal — tasteful, dependency-free, motion-safe.
-      // Native scroll is used throughout (CSS scroll-behavior: smooth); this
-      // just fades sections in as they enter the viewport. A safety timer
-      // reveals everything if the observer never fires, so content is never
-      // left hidden.
+      // --- Scroll reveal (with automatic stagger for grouped items) ---
+      // Sibling [data-reveal] elements under the same parent fade in one after
+      // another via animation-delay (animation, not transition — so it never
+      // clashes with an element's own hover transition). A safety timer reveals
+      // everything if the observer never fires, so content is never left hidden.
       const els = document.querySelectorAll('[data-reveal]');
+      els.forEach((el) => {
+        const sibs = Array.from(el.parentElement?.children ?? []).filter((n) => n.hasAttribute('data-reveal'));
+        const i = sibs.indexOf(el);
+        if (i > 0) (el as HTMLElement).style.animationDelay = Math.min(i * 0.08, 0.4) + 's';
+      });
       const revealAll = () => els.forEach((el) => el.classList.add('is-visible'));
       if (reduce || !('IntersectionObserver' in window)) {
         revealAll();
@@ -104,8 +114,73 @@ const graphs = [organizationJsonLd(), ...jsonLd];
           { rootMargin: '0px 0px -8% 0px', threshold: 0.1 },
         );
         els.forEach((el) => io.observe(el));
-        // Fail-safe: never leave content hidden if something goes wrong.
         window.setTimeout(revealAll, 3000);
+      }
+
+      // --- Count-up for numeric stats (animate when scrolled into view) ---
+      const counters = document.querySelectorAll<HTMLElement>('[data-countup]');
+      if (!reduce && counters.length && 'IntersectionObserver' in window) {
+        counters.forEach((el) => {
+          const target = parseInt((el.textContent || '').replace(/\D/g, ''), 10);
+          if (isNaN(target)) return;
+          el.dataset.target = String(target);
+          el.textContent = '0'; // capture target, then start from zero (no flash)
+        });
+        const cio = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((e) => {
+              if (!e.isIntersecting) return;
+              const el = e.target as HTMLElement;
+              cio.unobserve(el);
+              const target = parseInt(el.dataset.target || '', 10);
+              if (isNaN(target)) return;
+              const dur = 1000;
+              const t0 = performance.now();
+              const tick = (t: number) => {
+                const p = Math.min((t - t0) / dur, 1);
+                const eased = 1 - Math.pow(1 - p, 3);
+                el.textContent = Math.round(eased * target).toString();
+                if (p < 1) requestAnimationFrame(tick);
+              };
+              requestAnimationFrame(tick);
+            });
+          },
+          { threshold: 0.6 },
+        );
+        counters.forEach((c) => cio.observe(c));
+      }
+
+      // --- Lightweight parallax (transform via rAF; skipped on touch) ---
+      const layers = Array.from(document.querySelectorAll<HTMLElement>('[data-parallax]'));
+      if (!reduce && layers.length && !window.matchMedia('(hover: none)').matches) {
+        let ticking = false;
+        const update = () => {
+          const y = window.scrollY;
+          for (const el of layers) {
+            const speed = parseFloat(el.dataset.parallax || '') || 0.1;
+            el.style.transform = `translate3d(0, ${(y * speed).toFixed(1)}px, 0)`;
+          }
+          ticking = false;
+        };
+        window.addEventListener(
+          'scroll',
+          () => {
+            if (!ticking) {
+              requestAnimationFrame(update);
+              ticking = true;
+            }
+          },
+          { passive: true },
+        );
+        update();
+      }
+
+      // --- Header condenses after a little scroll ---
+      const header = document.querySelector('header');
+      if (header) {
+        const onScroll = () => header.toggleAttribute('data-scrolled', window.scrollY > 16);
+        window.addEventListener('scroll', onScroll, { passive: true });
+        onScroll();
       }
     </script>
   </body>

@@ -7,24 +7,25 @@ export interface Props {
   qualifications: string;
   specialty?: string;
   photo?: string;
+  focus?: string;
 }
-const { name, designation, qualifications, specialty, photo } = Astro.props;
+const { name, designation, qualifications, specialty, photo, focus } = Astro.props;
 const img = facultyPhoto(photo);
 ---
-<article data-reveal class="group flex flex-col overflow-hidden rounded-2xl border border-line bg-surface shadow-[var(--shadow-card)] transition hover:-translate-y-1">
-  <div class="relative aspect-[4/5] overflow-hidden bg-brand-50">
+<article data-reveal class="group flex flex-col items-center rounded-2xl border border-line bg-surface p-6 text-center shadow-[var(--shadow-card)] transition duration-300 hover:-translate-y-1 hover:border-brand-300">
+  <!-- Source portraits are low-resolution (≈120×144). We render them as a
+       compact avatar close to their native size so upscaling blur stays minimal. -->
+  <div class="h-28 w-28 shrink-0 overflow-hidden rounded-full bg-brand-50 ring-1 ring-line ring-offset-2 ring-offset-surface">
     {img ? (
-      <Image src={img} alt={`Photograph of ${name}`} width={520} height={650} class="h-full w-full object-cover object-top transition duration-500 group-hover:scale-[1.03]" />
+      <Image src={img} alt={`Photograph of ${name}`} width={224} height={224} style={`object-position:${focus ?? '50% 22%'}`} class="h-full w-full object-cover transition duration-500 group-hover:scale-105" />
     ) : (
       <div class="flex h-full w-full items-center justify-center bg-gradient-to-br from-brand-100 to-brand-200">
-        <span class="font-display text-4xl font-semibold text-brand-500">{initials(name)}</span>
+        <span class="font-display text-2xl font-semibold text-brand-500">{initials(name)}</span>
       </div>
     )}
   </div>
-  <div class="flex flex-1 flex-col p-5">
-    <h3 class="font-display text-lg font-semibold text-brand-900">{name}</h3>
-    <p class="mt-1 text-sm font-medium text-accent-600">{designation}</p>
-    <p class="mt-2 text-sm text-muted">{qualifications}</p>
-    {specialty && <p class="mt-auto pt-3 text-xs uppercase tracking-wide text-brand-400">{specialty}</p>}
-  </div>
+  <h3 class="mt-4 font-display text-base font-semibold text-brand-900">{name}</h3>
+  <p class="mt-1 text-sm font-medium text-accent-600">{designation}</p>
+  <p class="mt-1 text-sm text-muted">{qualifications}</p>
+  {specialty && <p class="mt-2 text-[11px] uppercase tracking-wide text-brand-400">{specialty}</p>}
 </article>

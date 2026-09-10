@@ -7,7 +7,7 @@
  */
 
 export const site = {
-  name: 'Sanjeevan Medical Foundation Post Graduate Institute',
+  name: 'Sanjeevan Medical Foundation ENT Post Graduate Training Institute',
   shortName: 'Sanjeevan PGI',
   legalName: 'Sanjeevan Medical Foundation ENT Post Graduate Training Institute',
   tagline: 'Postgraduate ENT Institute · Since 1984',
@@ -65,6 +65,7 @@ export const nav: NavItem[] = [
     children: [
       { label: 'Our History', href: '/about#history' },
       { label: 'Recognitions & Affiliations', href: '/about#recognitions' },
+      { label: 'Notices & Circulars', href: '/about#notices' },
       { label: 'Leadership', href: '/about#leadership' },
     ],
   },
@@ -89,7 +90,6 @@ export const nav: NavItem[] = [
       { label: 'Campus B — ENT', href: '/gallery/campus-b' },
     ],
   },
-  { label: 'Notices', href: '/notices' },
   { label: 'Contact', href: '/contact' },
 ];
 

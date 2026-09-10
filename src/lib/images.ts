@@ -12,6 +12,11 @@ const faculty = import.meta.glob<{ default: ImageMetadata }>(
   { eager: true },
 );
 
+const students = import.meta.glob<{ default: ImageMetadata }>(
+  '/src/assets/students/*.{jpg,jpeg,png,webp,avif}',
+  { eager: true },
+);
+
 const gallery = import.meta.glob<{ default: ImageMetadata }>(
   '/src/assets/gallery/**/*.{jpg,jpeg,png,webp,avif}',
   { eager: true },
@@ -20,6 +25,11 @@ const gallery = import.meta.glob<{ default: ImageMetadata }>(
 export function facultyPhoto(file?: string): ImageMetadata | undefined {
   if (!file) return undefined;
   return faculty[`/src/assets/faculty/${file}`]?.default;
+}
+
+export function studentPhoto(file?: string): ImageMetadata | undefined {
+  if (!file) return undefined;
+  return students[`/src/assets/students/${file}`]?.default;
 }
 
 export function galleryImage(dir: string, file: string): ImageMetadata | undefined {

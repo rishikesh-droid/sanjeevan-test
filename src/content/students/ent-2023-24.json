@@ -5,13 +5,16 @@
   "order": 2,
   "members": [
     {
-      "name": "Dr. Shivam Kalra"
+      "name": "Dr. Shivam Kalra",
+      "photo": "shivam-kalra.jpg"
     },
     {
-      "name": "Dr. Saurav Sabnis"
+      "name": "Dr. Saurav Sabnis",
+      "photo": "saurav-sabnis.jpg"
     },
     {
-      "name": "Dr. Vishnu Nagulkar"
+      "name": "Dr. Vishnu Nagulkar",
+      "photo": "vishnu-nagulkar.jpg"
     }
   ]
 }

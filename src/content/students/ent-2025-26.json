@@ -5,13 +5,16 @@
   "order": 4,
   "members": [
     {
-      "name": "Dr. Shivani Chechare"
+      "name": "Dr. Shivani Chechare",
+      "photo": "shivani-chechare.png"
     },
     {
-      "name": "Dr. Avishka Sharma"
+      "name": "Dr. Avishka Sharma",
+      "photo": "avishka-sharma.png"
     },
     {
-      "name": "Dr. Shreya Shinde"
+      "name": "Dr. Shreya Shinde",
+      "photo": "shreya-shinde.jpg"
     }
   ]
 }

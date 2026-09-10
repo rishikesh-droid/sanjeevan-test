@@ -20,7 +20,7 @@ const groups = [
   description="Meet the ENT and Fellowship faculty of Sanjeevan PGI, Miraj — professors, associate professors and consultants across ENT, surgical oncology and pathology."
   jsonLd={[breadcrumbJsonLd(crumbs)]}>
   <PageHero eyebrow="Faculty" title="Teaching Staff" crumbs={crumbs}
-    subtitle="Experienced clinicians, surgeons and educators guiding our postgraduate trainees." />
+    subtitle="ENT and Fellowship faculty of the institute." />
 
   {groups.map((g) => (
     <section class="container-page py-14">
@@ -33,7 +33,7 @@ const groups = [
       </div>
       <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {g.people.map((f) => (
-          <FacultyCard name={f.data.name} designation={f.data.designation} qualifications={f.data.qualifications} specialty={f.data.specialty} photo={f.data.photo} />
+          <FacultyCard name={f.data.name} designation={f.data.designation} qualifications={f.data.qualifications} specialty={f.data.specialty} photo={f.data.photo} focus={f.data.focus} />
         ))}
       </div>
     </section>

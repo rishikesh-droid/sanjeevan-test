@@ -5,13 +5,16 @@
   "order": 3,
   "members": [
     {
-      "name": "Dr. Palash Kamble"
+      "name": "Dr. Palash Kamble",
+      "photo": "palash-kamble.jpeg"
     },
     {
-      "name": "Dr. Jyoti Mundhe"
+      "name": "Jyoti Mundhe",
+      "photo": "jyoti-mundhe.jpg"
     },
     {
-      "name": "Dr. Harsh Samel"
+      "name": "Dr. Harsh Samel",
+      "photo": "harsh-samel.jpg"
     }
   ]
 }
