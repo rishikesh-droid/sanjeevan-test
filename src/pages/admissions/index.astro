@@ -161,10 +161,10 @@ const fellowshipFees = [
   </section>
 
   <!-- How to apply -->
-  <section id="how-to-apply" class="scroll-mt-24 bg-brand-950 py-16 text-white">
+  <section id="how-to-apply" class="scroll-mt-24 bg-surface-2 py-16">
     <div class="container-page">
-      <p class="text-xs font-semibold uppercase tracking-[0.2em] text-accent-300">How to Apply</p>
-      <h2 class="mt-3 font-display text-3xl font-semibold">Four steps to admission</h2>
+      <p class="text-xs font-semibold uppercase tracking-[0.2em] text-accent-600">How to Apply</p>
+      <h2 class="mt-3 font-display text-3xl font-semibold text-brand-900">Four steps to admission</h2>
       <ol class="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
         {[
           { t: 'Appear for NEET-PG', d: 'Qualify NEET-PG with a valid rank for the current admission cycle.' },
@@ -172,14 +172,14 @@ const fellowshipFees = [
           { t: 'Opt for Sanjeevan PGI', d: 'Choose the MS (ENT) seat at Sanjeevan PGI, Miraj during choice-filling.' },
           { t: 'Complete admission', d: 'Report with documents and complete fee payment as per the allotment.' },
         ].map((s, i) => (
-          <li data-reveal class="rounded-2xl border border-brand-800 bg-brand-900/40 p-6 transition duration-300 hover:-translate-y-1 hover:border-brand-600">
-            <span class="font-display text-3xl font-semibold text-accent-300">{i + 1}</span>
-            <h3 class="mt-2 font-semibold text-white">{s.t}</h3>
-            <p class="mt-1.5 text-sm text-brand-200">{s.d}</p>
+          <li data-reveal class="rounded-2xl border border-line bg-surface p-6 shadow-[var(--shadow-card)] transition duration-300 hover:-translate-y-1 hover:border-brand-300">
+            <span class="font-display text-3xl font-semibold text-accent-600">{i + 1}</span>
+            <h3 class="mt-2 font-semibold text-brand-900">{s.t}</h3>
+            <p class="mt-1.5 text-sm text-muted">{s.d}</p>
           </li>
         ))}
       </ol>
-      <a href="/contact" class="mt-10 inline-block rounded-full bg-accent-600 px-6 py-3 text-sm font-semibold transition hover:bg-accent-700">Contact Us</a>
+      <a href="/contact" class="mt-10 inline-block rounded-full bg-accent-600 px-6 py-3 text-sm font-semibold text-white transition hover:bg-accent-700">Contact Us</a>
     </div>
   </section>
 </BaseLayout>
