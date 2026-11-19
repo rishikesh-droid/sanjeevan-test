@@ -5,7 +5,7 @@
   "description": "Sanjeevan Medical Foundation Post Graduate Institute (Sanjeevan PGI) — official website",
   "scripts": {
     "dev": "astro dev",
-    "start": "astro preview --host 0.0.0.0 --port ${PORT:-3000}",
+    "start": "node scripts/serve.mjs",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
