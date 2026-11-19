@@ -39,7 +39,7 @@ export default defineConfig({
   output,
   adapter,
   integrations,
-  vite: { plugins: [tailwindcss()] },
+  vite: { plugins: [tailwindcss()], preview: { allowedHosts: true } },
   image: { domains: ['sanjeevanpgi.com'] },
   build: { inlineStylesheets: 'auto' },
 });
